@@ -9,6 +9,7 @@ from pydantic import BaseModel
 from annotated_types import T
 import os
 from dotenv import load_dotenv
+from fastapi.middleware.cors import CORSMiddleware
 
 T = TypeVar("T")
 class Response(BaseModel, Generic[T]):
@@ -75,6 +76,14 @@ async def lifespan(app: FastAPI):
     yield
 
 app = FastAPI(root_path="/api/v1", lifespan=lifespan)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 async def root():

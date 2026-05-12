@@ -187,16 +187,17 @@ async def dispatch_task(task_id: int, session: SessionDep):
     session.commit()
     return {"data": data}
 
-# Cancels a task by resetting the status to "standby"
-@app.patch("/tasks/{task_id}/cancel", response_model=Response[Task])
-async def cancel_task(task_id: int, session: SessionDep):
-    data = session.get(Task, task_id)
-    if not data:
+# Marks a task standby
+@app.patch("/tasks/{task_id}/standby", response_model=Response[Task])
+async def standby_task(task_id: int, session: SessionDep):
+    task_standby = session.get(Task, task_id)
+    if not task_standby:
         raise HTTPException(status_code=404)
-    data.status = "standby"
-    session.add(data)
+    task_standby.status = "standby"
+    session.add(task_standby)
     session.commit()
-    return {"data": data}
+    session.refresh(task_standby)
+    return {"data": task_standby}
 
 # API Endpoints for the Mobile Robot Maid
 

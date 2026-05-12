@@ -1,14 +1,27 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
 import './App.css'
+import { Routes, Route, useNavigate } from 'react-router-dom'
+import Rooms from './Rooms.jsx'
 
-const App = () => {
+const Home = () => {
+  const navigate = useNavigate()
+
   return (
-    <div>
-      Hello World
-    </div>
+    <main className="min-h-screen flex items-center justify-center bg-slate-50">
+      <button
+        onClick={() => navigate('/rooms')}
+        className="rounded-full bg-blue-600 px-8 py-4 text-white text-lg font-semibold hover:bg-blue-700 transition"
+      >
+        Start
+      </button>
+    </main>
   )
 }
+
+const App = () => (
+  <Routes>
+    <Route path="/" element={<Home />} />
+    <Route path="/rooms" element={<Rooms />} />
+  </Routes>
+)
+
 export default App

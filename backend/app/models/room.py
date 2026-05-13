@@ -10,7 +10,8 @@ class Room(SQLModel, table=True):
     """Room database model."""
 
     id: Optional[int] = Field(default=None, primary_key=True)
-    name: str
+    name: str = Field(index=True)
+    description: Optional[str] = None
     x_coord: float
     y_coord: float
     localization_data: dict | None = Field(

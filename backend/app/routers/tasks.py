@@ -38,8 +38,10 @@ async def update_task(task_id: int, task_data: TaskCreateSchema, session: Sessio
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
 
-    task.name = task_data.name
-    task.room_id = task_data.room_id
+    update_data = task_data.model_dump(exclude_unset=True)
+    for key, value in update_data.items():
+        setattr(task, key, value)
+
     session.add(task)
     session.commit()
     session.refresh(task)

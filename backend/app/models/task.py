@@ -9,7 +9,7 @@ class Task(SQLModel, table=True):
 
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str
-    status: str = Field(default="standby")
-    dispatched_at: Optional[datetime] = Field(default=None)
-    room_id: int = Field(foreign_key="room.id")
+    status: str = Field(default="standby", index=True)
+    dispatched_at: Optional[datetime] = Field(default=None, index=True)
+    room_id: int = Field(foreign_key="room.id", index=True)
     room: Optional["Room"] = Relationship(back_populates="tasks")

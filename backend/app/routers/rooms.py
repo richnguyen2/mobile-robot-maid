@@ -37,10 +37,9 @@ async def update_room(room_id: int, room_data: RoomCreateSchema, session: Sessio
     if not room:
         raise HTTPException(status_code=404, detail="Room not found")
 
-    room.name = room_data.name
-    room.x_coord = room_data.x_coord
-    room.y_coord = room_data.y_coord
-    room.localization_data = room_data.localization_data
+    update_data = room_data.model_dump(exclude_unset=True)
+    for key, value in update_data.items():
+        setattr(room, key, value)
 
     session.add(room)
     session.commit()

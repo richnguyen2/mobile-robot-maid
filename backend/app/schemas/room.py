@@ -6,6 +6,7 @@ from pydantic import BaseModel
 
 class RoomCreateSchema(BaseModel):
     name: str
+    description: Optional[str] = None
     x_coord: float
     y_coord: float
     localization_data: Optional[dict] = None

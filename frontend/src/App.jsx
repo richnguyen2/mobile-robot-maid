@@ -1,6 +1,6 @@
 import './App.css'
 import { Routes, Route, useNavigate } from 'react-router-dom'
-import Rooms from './Rooms.jsx'
+import RoomsPage from './pages/RoomsPage.jsx'
 
 const Home = () => {
   const navigate = useNavigate()
@@ -20,7 +20,7 @@ const Home = () => {
 const App = () => (
   <Routes>
     <Route path="/" element={<Home />} />
-    <Route path="/rooms" element={<Rooms />} />
+    <Route path="/rooms" element={<RoomsPage />} />
   </Routes>
 )
 

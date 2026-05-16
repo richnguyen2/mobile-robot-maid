@@ -7,8 +7,8 @@ const statusClasses = {
 
 const formatStatus = (status) => status.replace('_', ' ')
 
-const SidebarTask = ({ task, onCancel }) => (
-  <div className="group relative rounded-2xl bg-slate-50 p-4 border border-slate-200 transition hover:bg-slate-100">
+const Task = ({ task, onCancel }) => (
+  <div className="group relative rounded-2xl p-4 mb-4 border transition hover:bg-slate-100">
     <div className="pr-8">
       <p className="font-semibold text-slate-900">
         {task.status === 'completed' ? `${task.name}: Completed!` : task.name}
@@ -28,4 +28,4 @@ const SidebarTask = ({ task, onCancel }) => (
   </div>
 )
 
-export default SidebarTask
+export default Task

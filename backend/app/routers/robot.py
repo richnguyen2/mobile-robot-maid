@@ -23,7 +23,6 @@ async def get_next_task(session: SessionDep) -> Optional[dict]:
     return {
         "task_id": task.id,
         "name": task.name,
-        "x_coord": task.room.x_coord,
-        "y_coord": task.room.y_coord,
-        "localization_data": task.room.localization_data,
+        "x_coord": task.node.x_coord,
+        "y_coord": task.node.y_coord,
     }

@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 class TaskCreateSchema(BaseModel):
     name: str
-    room_id: int
+    node_id: int
 
 
 class TaskSchema(TaskCreateSchema):

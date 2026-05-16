@@ -1,5 +1,5 @@
 """Models package."""
-from app.models.room import Room
 from app.models.task import Task
+from app.models.node import Node
 
-__all__ = ["Room", "Task"]
+__all__ = ["Node", "Task"]

@@ -11,5 +11,5 @@ class Task(SQLModel, table=True):
     name: str
     status: str = Field(default="standby", index=True)
     dispatched_at: Optional[datetime] = Field(default=None, index=True)
-    room_id: int = Field(foreign_key="room.id", index=True)
-    room: Optional["Room"] = Relationship(back_populates="tasks")
+    node_id: int = Field(foreign_key="node.id", index=True, nullable=False)
+    node: Optional["Node"] = Relationship(back_populates="tasks")

@@ -14,6 +14,11 @@ async def list_tasks(session: SessionDep) -> dict:
     tasks = session.exec(select(Task)).all()
     return {"data": tasks}
 
+@router.get("/active", response_model=ResponseSchema[list[TaskSchema]])
+async def list_active_tasks(session: SessionDep) -> dict:
+    data = select(Task).where(Task.status != "standby").order_by(Task.dispatched_at)
+    active_task = session.exec(data).all()
+    return {"data": active_task}
 
 @router.get("/{task_id}", response_model=ResponseSchema[TaskSchema])
 async def get_task(task_id: int, session: SessionDep) -> dict:
@@ -22,6 +27,10 @@ async def get_task(task_id: int, session: SessionDep) -> dict:
         raise HTTPException(status_code=404, detail="Task not found")
     return {"data": task}
 
+@router.get("/node/{node_id}", response_model=ResponseSchema[list[TaskSchema]])
+async def list_tasks_by_node(node_id: int, session: SessionDep) -> dict:
+    tasksByNodeId = session.exec(select(Task).where(Task.node_id == node_id)).all()
+    return {"data": tasksByNodeId}
 
 @router.post("", response_model=ResponseSchema[TaskSchema], status_code=201)
 async def create_task(task_data: TaskCreateSchema, session: SessionDep) -> dict:
@@ -30,23 +39,6 @@ async def create_task(task_data: TaskCreateSchema, session: SessionDep) -> dict:
     session.commit()
     session.refresh(task)
     return {"data": task}
-
-
-@router.put("/{task_id}", response_model=ResponseSchema[TaskSchema])
-async def update_task(task_id: int, task_data: TaskCreateSchema, session: SessionDep) -> dict:
-    task = session.get(Task, task_id)
-    if not task:
-        raise HTTPException(status_code=404, detail="Task not found")
-
-    update_data = task_data.model_dump(exclude_unset=True)
-    for key, value in update_data.items():
-        setattr(task, key, value)
-
-    session.add(task)
-    session.commit()
-    session.refresh(task)
-    return {"data": task}
-
 
 @router.delete("/{task_id}")
 async def delete_task(task_id: int, session: SessionDep) -> dict:

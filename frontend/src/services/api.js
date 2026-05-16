@@ -1,21 +1,19 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 
-export const fetchJson = async (endpoint, options = {}) => {
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
-  });
+export const api = {
 
-  if (!response.ok) {
-    const message = await response.text();
-    throw new Error(message || `Request failed: ${response.status}`);
+  // Fetch the active sorted tasks
+  getActiveTasks: async () => {
+    const res = await fetch(`${API_BASE_URL}/tasks/active`);
+    if (!res.ok) throw new Error('Failed to load active tasks');
+    const json = await res.json();
+    return json.data;
+  },
+
+  standbyTask: async (taskId) => {
+    const res = await fetch(`${API_BASE_URL}/tasks/${taskId}/standby`, { method: 'PATCH' });
+    if (!res.ok) throw new Error('Failed to put task on standby');
+    return await res.json();
   }
 
-  // Handle empty responses (like 204 No Content) safely
-  if (response.status === 204) return null;
-
-  return response.json();
 };

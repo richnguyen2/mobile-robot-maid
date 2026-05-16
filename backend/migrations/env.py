@@ -9,7 +9,7 @@ from app.database import engine
 from sqlmodel import SQLModel
 
 # Import all models so they're registered with SQLModel.metadata
-from app.models import Room, Task
+from app.models import Task, Node
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

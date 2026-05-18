@@ -1,8 +1,16 @@
+import { getNodesBounds } from "@xyflow/react";
+
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 
 export const api = {
 
-  // Fetch the active sorted tasks
+  getNodes: async () => {
+    const res = await fetch(`${API_BASE_URL}/nodes`);
+    if (!res.ok) throw new Error('Failed to load nodes');
+    const json = await res.json();
+    return json.data;
+  },
+
   getActiveTasks: async () => {
     const res = await fetch(`${API_BASE_URL}/tasks/active`);
     if (!res.ok) throw new Error('Failed to load active tasks');

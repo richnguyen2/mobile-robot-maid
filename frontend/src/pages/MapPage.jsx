@@ -1,7 +1,8 @@
 import { ReactFlow, applyNodeChanges, applyEdgeChanges, addEdge, Background } from '@xyflow/react';
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import WaypointNode from '../components/WaypointNode';
 import LocationNode from '../components/LocationNode';
+import CreateTaskModal from '../components/CreateTaskModal';
 import TaskList from '../components/TaskList';
 import React from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -14,6 +15,8 @@ const nodeTypes = {
 
 const MapPage = () => {
     const queryClient = useQueryClient();
+    const [expandedNodeId, setExpandedNodeId] = useState(null);
+    const [activeCreateTaskModalId, setActiveCreateTaskModalId] = useState(null);
 
     const {
         data: tasks = [],
@@ -44,13 +47,21 @@ const MapPage = () => {
         queryKey: ['nodes'],
         queryFn: api.getNodes,
 
-        select: (rawNodes) => rawNodes.map(node => ({
-            id: node.id.toString(),
-            type: node.node_type,
-            position: { x: node.x_coord, y: node.y_coord },
-            data: { label: node.label ?? "" },
-            draggable: false
-        }))
+        select: (rawNodes) => rawNodes.map(node => {
+            const isExpanded = expandedNodeId === node.id.toString();
+            return {
+                id: node.id.toString(),
+                type: node.node_type,
+                position: { x: node.x_coord, y: node.y_coord },
+                zIndex: isExpanded ? 1000 : 1,
+                data: {
+                    label: node.label ?? "",
+                    expandedNodeId,
+                    setExpandedNodeId,
+                    openTaskModal: (nodeId) => setActiveCreateTaskModalId(nodeId)
+                },
+                draggable: false
+        }})
     });
 
     return (
@@ -64,14 +75,25 @@ const MapPage = () => {
                             nodes={nodes}
                             nodeTypes={nodeTypes}
                             nodesConnectable={false}
+                            onPaneClick={() => {
+                                setExpandedNodeId(null);
+                            }}
                             fitView
                         >
-                        <Background />
+                            <Background />
                         </ReactFlow>
+                        {activeCreateTaskModalId && (
+                            <div className="fixed inset-0 backdrop-blur-xs z-[9999] flex items-center justify-center">
+                                <CreateTaskModal
+                                    activeCreateTaskModalId={activeCreateTaskModalId}
+                                    setActiveCreateTaskModalId={setActiveCreateTaskModalId}
+                                />
+                            </div>
+                        )}
                     </>
                 )}
             </div>
-            <div className="absolute top-4 right-4 z-10 p-4 border rounded-lg bg-white">
+            <div className="absolute top-4 right-4 z-10 p-4 border border-2 rounded-xl bg-white">
                 {isTasksLoading ? (
                     <p>Loading tasks...</p>
                 ) : (

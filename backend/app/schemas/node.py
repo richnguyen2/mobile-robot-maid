@@ -21,5 +21,3 @@ class NodeSchema(NodeCreateSchema):
 class NodeUpdate(BaseModel):
     label: Optional[str] = None
     node_type: Optional[str] = None
-    x_coord: Optional[float] = None
-    y_coord: Optional[float] = None

@@ -1,30 +1,22 @@
-const statusClasses = {
-  pending: 'bg-yellow-100 text-yellow-800',
-  in_progress: 'bg-blue-100 text-blue-800',
-  completed: 'bg-green-100 text-green-800',
-  standby: 'bg-gray-100 text-gray-800',
-}
-
 const formatStatus = (status) => status.replace('_', ' ')
 
 const Task = ({ task, onCancel }) => (
-  <div className="group relative rounded-2xl p-4 mb-4 border transition hover:bg-slate-100">
-    <div className="pr-8">
-      <p className="font-semibold text-slate-900">
-        {task.status === 'completed' ? `${task.name}: Completed!` : task.name}
+  <div className="rounded-2xl p-2 mb-4 border transition items-center place-content-center justify-between group">
+    <div className="flex items-center justify-between">
+      <p className="font-medium pr-2">
+        {task.name}
       </p>
-      <span className={`mt-2 inline-block px-3 py-1 rounded-full text-xs font-semibold ${statusClasses[task.status] || statusClasses.standby}`}>
+      <span className={`px-3 py-2 mr-12 rounded-full text-xs font-semibold border border-black || statusClasses.standby}`}>
         {formatStatus(task.status)}
       </span>
+      <button
+        type="button"
+        onClick={() => onCancel(task.id)}
+        className="absolute right-6 rounded-full border border-black text-xs py-2 px-4 text-black transition group-hover:text-white group-hover:bg-black"
+      >
+        x
+      </button>
     </div>
-    <button
-      type="button"
-      onClick={() => onCancel(task.id)}
-      className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-red-500 p-2 text-white opacity-0 transition group-hover:opacity-100"
-      aria-label={`Move ${task.name} to standby`}
-    >
-      ✕
-    </button>
   </div>
 )
 

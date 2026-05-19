@@ -13,6 +13,17 @@ async def list_nodes(session: SessionDep) -> dict:
     nodes = session.exec(select(Node)).all()
     return {"data": nodes}
 
+@router.get("/locations", response_model=ResponseSchema[list[NodeSchema]])
+async def list_location_nodes(session: SessionDep) -> dict:
+    data = select(Node).where(Node.node_type == "location")
+    nodes = session.exec(data).all()
+    return {"data": nodes}
+
+@router.get("/occupants", response_model=ResponseSchema[list[NodeSchema]])
+async def list__occupant_nodes(session:SessionDep) -> dict:
+    data = select(Node).where(Node.is_occupied == "1.0")
+    nodes = session.exec(data).all()
+    return {"data": nodes}
 
 @router.get("/{node_id}", response_model=ResponseSchema[NodeSchema])
 async def get_node(node_id: int, session: SessionDep) -> dict:

@@ -1,4 +1,4 @@
 """Routers package."""
-from . import tasks, robot, nodes
+from . import tasks, robot, nodes, ws
 
-__all__ = ["tasks", "robot", "nodes"]
+__all__ = ["tasks", "robot", "nodes", "ws"]

@@ -9,9 +9,13 @@ class Node(SQLModel, table=True):
     """Node database model."""
 
     id: Optional[int] = Field(default=None, primary_key=True)
-    node_type: str = Field(index=True, nullable=False)
-    label: str = Field(index=True, nullable=True)
-    x_coord: float = Field(nullable=False)
-    y_coord: float = Field(nullable=False)
-    created_at: datetime = Field(default_factory=lambda: datetime.now(), nullable=False)
+
+    x_coord: int = Field(nullable=False)
+    y_coord: int = Field(nullable=False)
+
+    node_type: str = Field(default="grid_cell", index=True)
+    label: Optional[str] = Field(default=None)
+
+    is_occupied: float = Field(default=0, nullable=False)
+
     tasks: List["Task"] = Relationship(back_populates="node")

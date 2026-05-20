@@ -1,5 +1,5 @@
 from typing import Optional
-from sqlmodel import SQLModel, Field
+from sqlmodel import SQLModel, Field, Relationship
 
 class Robot(SQLModel, table=True):
     """Tracks Robot's State."""
@@ -10,3 +10,6 @@ class Robot(SQLModel, table=True):
     current_node_id: int = Field(foreign_key="node.id", nullable=False)
     
     current_task_id: Optional[int] = Field(default=None, foreign_key="task.id")
+
+    current_node: Optional["Node"] = Relationship()
+    current_task: Optional["Task"] = Relationship()

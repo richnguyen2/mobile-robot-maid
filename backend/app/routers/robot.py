@@ -20,7 +20,7 @@ async def get_robot_node(session: SessionDep) -> dict:
     robot = session.exec(select(Robot).where(Robot.name == "Bot-01")).first()
     if not robot:
         raise HTTPException(status_code=404, detail="Virtual simulation robot asset not found.")
-    node = session.exec(select(Node).where(Node.id == robot.current_node_id)).first()
+    node = robot.current_node
     if not node:
         raise HTTPException(status_code=404, detail="Robot position node not found in grid.")
     return {"data": node}
@@ -61,7 +61,7 @@ async def update_robot(robot_update: RobotUpdate, session: SessionDep) -> Option
     session.commit()
     session.refresh(robot)
 
-    node = session.exec(select(Node).where(Node.id == robot.current_node_id)).first()
+    node = robot.current_node
 
     await manager.broadcast({
         "type": "ROBOT_MOVED", 

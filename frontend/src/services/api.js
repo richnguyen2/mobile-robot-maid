@@ -2,7 +2,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
 
 export const api = {
 
-  // NODES API ENDPOINT
+  // NODES API REQUESTS
 
   getNodes: async () => {
     const res = await fetch(`${API_BASE_URL}/nodes`);
@@ -44,7 +44,7 @@ export const api = {
     return await res.json();
   },
 
-  // TASKS API ENDPOINTS
+  // TASKS API REQUESTS
 
   getActiveTasks: async () => {
     const res = await fetch(`${API_BASE_URL}/tasks/active`);
@@ -100,7 +100,7 @@ export const api = {
     return await res.json();
   },
 
-  // ROBOT API ENDPOINTS
+  // ROBOT API REQUESTS
 
   getRobotPath: async () => {
     const res = await fetch(`${API_BASE_URL}/robot/path`);

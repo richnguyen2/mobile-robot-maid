@@ -6,11 +6,11 @@ from app.config import DATABASE_URL
 engine = create_engine(DATABASE_URL)
 
 def seed_grid():
-    print("🚀 Starting Grid Map Seeding Process...")
+    print("Starting Grid Map Seeding Process...")
     
     with Session(engine) as session:
         
-        print("🧹 Clearing out old database records...")
+        print("Clearing out old database records...")
         session.query(Robot).delete()
         session.query(Task).delete()
         session.query(Edge).delete()
@@ -38,6 +38,7 @@ def seed_grid():
                 is_wall = (x, y) in wall_coordinates
                 loc_meta = special_locations.get((x, y), {"node_type": "grid_cell", "label": None})
                 
+                # Fix: Make node-type: "occupant" if is_wall
                 node = Node(
                     x_coord=x,
                     y_coord=y,

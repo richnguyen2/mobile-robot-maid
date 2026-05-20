@@ -93,7 +93,6 @@ const MapPage = () => {
 
     const {
         data: pathData = { nodes: [], edges: [] },
-        isLoading: isPathLoading
     } = useQuery({
         queryKey: ['robot', 'path'],
         queryFn: api.getRobotPath,
@@ -125,19 +124,6 @@ const MapPage = () => {
         queryFn: api.getRobotNode,
     });
 
-    useEffect(() => {
-    const ws = new WebSocket("ws://localhost:8000/ws/robot");
-
-    ws.onmessage = (event) => {
-        const message = JSON.parse(event.data);
-        if (message.type === 'POSITION_UPDATED') {
-            queryClient.setQueryData(['robot', 'node'], message.payload );
-        }
-    };
-
-    return () => ws.close();
-}, [queryClient]);
-
     // Only for Simulated Robot! Will remove later
     const updateRobotPositionMutation = useMutation({
         mutationFn: (newPosition) => api.updateRobot(newPosition),
@@ -151,6 +137,19 @@ const MapPage = () => {
             alert(`Could not update robot position: ${error.message}`);
         }
     });
+
+    useEffect(() => {
+        const ws = new WebSocket("ws://localhost:8000/ws/robot");
+
+        ws.onmessage = (event) => {
+            const message = JSON.parse(event.data);
+            if (message.type === 'POSITION_UPDATED') {
+                queryClient.setQueryData(['robot', 'node'], message.payload);
+            }
+        };
+
+        return () => ws.close();
+    }, [queryClient]);
 
     const completeTaskMutation = useMutation({
         mutationFn: (taskId) => api.completeTask(taskId),
@@ -181,13 +180,12 @@ const MapPage = () => {
     return (
         <div className="w-full h-screen overflow-hidden">
             <div className="absolute inset-0 z-0">
-                {isNodesLoading ? (
+                {(isNodesLoading || isOccupantsLoading) ? (
                     <p>Loading map...</p>
                 ) : (
                     <>
                         <ReactFlow
                             nodes={combinedNodes}
-                            // edges={pathData.edges}
                             nodeTypes={nodeTypes}
                             nodesConnectable={false}
                             onPaneClick={() => {

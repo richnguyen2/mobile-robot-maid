@@ -11,3 +11,11 @@ class Edge(SQLModel, table=True):
     source: int = Field(foreign_key="node.id", index=True, nullable=False)
     target: int = Field(foreign_key="node.id", index=True, nullable=False)
     
+    source_node: Optional["Node"] = Relationship(
+        back_populates="source_edges", 
+        sa_relationship_kwargs={"foreign_keys": "[Edge.source]"}
+    )
+    target_node: Optional["Node"] = Relationship(
+        back_populates="target_edges", 
+        sa_relationship_kwargs={"foreign_keys": "[Edge.target]"}
+    )

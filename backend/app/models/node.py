@@ -19,3 +19,6 @@ class Node(SQLModel, table=True):
     is_occupied: float = Field(default=0, nullable=False)
 
     tasks: List["Task"] = Relationship(back_populates="node")
+
+    source_edges: List["Edge"] = Relationship(back_populates="source_node", sa_relationship_kwargs={"foreign_keys": "[Edge.source]"})
+    target_edges: List["Edge"] = Relationship(back_populates="target_node", sa_relationship_kwargs={"foreign_keys": "[Edge.target]"})

@@ -11,17 +11,20 @@ router = APIRouter(prefix="/tasks", tags=["tasks"])
 
 @router.get("", response_model=ResponseSchema[list[TaskSchema]])
 async def list_tasks(session: SessionDep) -> dict:
+    """List all tasks"""
     tasks = session.exec(select(Task)).all()
     return {"data": tasks}
 
 @router.get("/active", response_model=ResponseSchema[list[TaskSchema]])
 async def list_active_tasks(session: SessionDep) -> dict:
+    """List all tasks that are not on standby"""
     data = select(Task).where(Task.status != "standby").order_by(Task.dispatched_at)
     active_task = session.exec(data).all()
     return {"data": active_task}
 
 @router.get("/{task_id}", response_model=ResponseSchema[TaskSchema])
 async def get_task(task_id: int, session: SessionDep) -> dict:
+    """Return a task by its task_id"""
     task = session.get(Task, task_id)
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
@@ -29,11 +32,13 @@ async def get_task(task_id: int, session: SessionDep) -> dict:
 
 @router.get("/node/{node_id}", response_model=ResponseSchema[list[TaskSchema]])
 async def list_tasks_by_node(node_id: int, session: SessionDep) -> dict:
+    """List all tasks in a node"""
     tasksByNodeId = session.exec(select(Task).where(Task.node_id == node_id)).all()
     return {"data": tasksByNodeId}
 
 @router.post("", response_model=ResponseSchema[TaskSchema], status_code=201)
 async def create_task(task_data: TaskCreateSchema, session: SessionDep) -> dict:
+    """Create a new a task"""
     task = Task.model_validate(task_data)
     session.add(task)
     session.commit()
@@ -42,6 +47,7 @@ async def create_task(task_data: TaskCreateSchema, session: SessionDep) -> dict:
 
 @router.delete("/{task_id}")
 async def delete_task(task_id: int, session: SessionDep) -> dict:
+    """Delete a task"""
     task = session.get(Task, task_id)
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
@@ -52,6 +58,7 @@ async def delete_task(task_id: int, session: SessionDep) -> dict:
 
 @router.patch("/{task_id}/dispatch", response_model=ResponseSchema[TaskSchema])
 async def dispatch_task(task_id: int, session: SessionDep) -> dict:
+    """Sets the given task to pending if on standby or completed"""
     task = session.get(Task, task_id)
     if not task or task.status not in ("standby", "completed"):
         raise HTTPException(status_code=400, detail="Task not in standby")
@@ -66,6 +73,7 @@ async def dispatch_task(task_id: int, session: SessionDep) -> dict:
 
 @router.patch("/{task_id}/standby", response_model=ResponseSchema[TaskSchema])
 async def standby_task(task_id: int, session: SessionDep) -> dict:
+    """"Sets the task's status to standby"""
     task = session.get(Task, task_id)
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
@@ -79,6 +87,7 @@ async def standby_task(task_id: int, session: SessionDep) -> dict:
 
 @router.patch("/{task_id}/complete", response_model=ResponseSchema[TaskSchema])
 async def complete_task(task_id: int, session: SessionDep) -> dict:
+    """Sets the task's status to complete"""
     task = session.get(Task, task_id)
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")

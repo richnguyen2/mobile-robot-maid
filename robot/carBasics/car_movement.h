@@ -1,5 +1,5 @@
-#ifndef CAR_MOVEMENT
-#define CAR_MOVEMENT
+#ifndef CAR_MOVEMENT_H
+#define CAR_MOVEMENT_H
 
 class carBase {
   private:
@@ -9,10 +9,14 @@ class carBase {
     int rightDir = 7; // Right Wheel Direction
     int pwmLeft = 6; // Left Wheels Power
     int leftDir = 8; // Left Wheel Direction
-    float pwmVal = 100; // Control Power (Speed)
 
     float linearVel;
     float angularVel;
+
+    bool moving = false;
+    unsigned long startTime = 0;
+    unsigned long moveDuration = 0;
+    const float OBSTACLE_THRESHOLD = 10;
 
     // PWM calculation for linearVel and angularVel
     float calcLinearPWM(float linearVel);
@@ -34,7 +38,8 @@ class carBase {
     void turnRight(float angle, float angVel);
     void turnLeft(float angle);
     void turnLeft(float angle, float angVel);
-    void turnCalib();
+    void update(float measuredDistance);
+    void stop();
 
     // Get variables
     float getLinearVel() { return linearVel; }

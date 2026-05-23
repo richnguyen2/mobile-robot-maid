@@ -3,10 +3,7 @@
 #include <Arduino.h>
 
 // Constructor for base car class
-carBase::carBase(float linVel, float angVel) {
-  linearVel = linVel;
-  angularVel = angVel; 
-}
+carBase::carBase(float linVel, float angVel) : linearVel(linVel), angularVel(angVel) {}
 
 // Pin setup
 void carBase::begin() {
@@ -14,22 +11,23 @@ void carBase::begin() {
   pinMode(pwmRight, OUTPUT);
   pinMode(pwmLeft, OUTPUT);
   pinMode(rightDir, OUTPUT);
+  stop();
 }
 
 // Calculate PWM value based on linear velocity, Default PWMVal = 100
 float carBase::calcLinearPWM(float linVel) {
-  float val = (linVel - .01)/.0124; // linear calibration of linear velocity and PWM
+  float val = (linVel - .01f)/.0124f; // linear calibration of linear velocity and PWM
   return val;
 }
 
 // Calculate PWM value based on angular velocity, Default PWMVal = 180
 float carBase::calcAngularPWM(float angVel) {
-  float val = (angVel + 55.8)/2.258;  // calibration of angular velocity and PWM
+  float val = (angVel + 55.8f)/2.258f;  // calibration of angular velocity and PWM
   return val;
 }
 
 void carBase::setLinearVel(float vel) {
-  if ((vel > 1.25) & (vel < 3.16)) {
+  if ((vel > 1.25f) & (vel < 3.16f)) {
     linearVel = vel;
     Serial.print("\nUpdated Linear Vel: ");
     Serial.print(linearVel);
@@ -40,7 +38,7 @@ void carBase::setLinearVel(float vel) {
 }
 
 void carBase::moveForward(float distance, float linVel) {
-  moveDuration = (distance/linVel) * 1000;
+  moveDuration = (distance/linVel) * 1000.0f;
 
   startTime = millis();
   moving = true;
@@ -67,7 +65,7 @@ void carBase::moveForward(float distance) {
 }
 
 void carBase::moveBackward(float distance, float linVel) {
-  moveDuration = (distance/linVel) * 1000;
+  moveDuration = (distance/linVel) * 1000.0f;
 
   startTime = millis();
   moving = true;
@@ -94,7 +92,7 @@ void carBase::moveBackward(float distance) {
 }
 
 void carBase::turnRight(float angle, float angVel) {
-  moveDuration = (angle/angVel) * 1000;
+  moveDuration = (angle/angVel) * 1000.0f;
 
   startTime = millis();
   moving = true;
@@ -120,7 +118,7 @@ void carBase::turnRight(float angle) {
 }
 
 void carBase::turnLeft(float angle, float angVel) {
-  moveDuration = (angle/angVel) * 1000;
+  moveDuration = (angle/angVel) * 1000.0f;
 
   startTime = millis();
   moving = true;

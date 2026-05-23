@@ -3,8 +3,8 @@
 
 class ultrasonicSensor {
   private:
-    int trigPin = 13;
-    int echoPin = 12;
+    static constexpr int trigPin = 13;
+    static constexpr int echoPin = 12;
   
   public:
     void begin();

@@ -5,7 +5,12 @@
 carBase myCar;
 IRcontroller remote(myCar);
 ultrasonicSensor distanceSensor;
+
+constexpr int TASK_PERIOD_MS = 20;
+int lastExecutionTime = 0;
+
 int delayTime = 1000;
+
 float measDist;
 
 void setup() {
@@ -14,12 +19,17 @@ void setup() {
   remote.begin();
   distanceSensor.begin();
   delay(delayTime);
+
+  myCar.moveForward(10.0f);
 }
 
 void loop() {
-  myCar.moveForward(10);
-  while (true) {
+  int currentTime = millis();
+  if (currentTime - lastExecutionTime >= TASK_PERIOD_MS) {
+    lastExecutionTime = currentTime;
+
     measDist = distanceSensor.findDistance();
-    myCar.update(measDist);   
-  }
+    myCar.update(measDist);
+
+  } 
 }

@@ -1,14 +1,14 @@
 #ifndef CAR_MOVEMENT_H
 #define CAR_MOVEMENT_H
 
-class carBase {
+class carBase final {
   private:
     // Motor pins 
-    int STBY = 3; // Motor Controller Enable
-    int pwmRight = 5; // Right Wheel Power
-    int rightDir = 7; // Right Wheel Direction
-    int pwmLeft = 6; // Left Wheels Power
-    int leftDir = 8; // Left Wheel Direction
+    static constexpr int STBY = 3; // Motor Controller Enable
+    static constexpr int pwmRight = 5; // Right Wheel Power
+    static constexpr int rightDir = 7; // Right Wheel Direction
+    static constexpr int pwmLeft = 6; // Left Wheels Power
+    static constexpr int leftDir = 8; // Left Wheel Direction
 
     float linearVel;
     float angularVel;
@@ -16,7 +16,8 @@ class carBase {
     bool moving = false;
     unsigned long startTime = 0;
     unsigned long moveDuration = 0;
-    const float OBSTACLE_THRESHOLD = 10;
+
+    static constexpr float OBSTACLE_THRESHOLD = 10.0f;
 
     // PWM calculation for linearVel and angularVel
     float calcLinearPWM(float linearVel);
@@ -24,7 +25,7 @@ class carBase {
 
   public:
     // Constructor
-    carBase(float linVel = 1.25, float angVel = 180);
+    carBase(float linVel = 1.25f, float angVel = 180.0f);
 
     // Pin setup
     void begin();

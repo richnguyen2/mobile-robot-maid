@@ -2,12 +2,10 @@
 #define IR_CONTROLLER_H
 
 #include "car_movement.h"
-#include <IRremote.h>
+#include <Arduino.h>
 
 class IRcontroller {
   private:
-    decode_results cmd;
-    IRrecv IR;
     carBase &car; // reference to existing car object
   
   public:

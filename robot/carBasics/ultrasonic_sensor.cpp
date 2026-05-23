@@ -17,8 +17,8 @@ float ultrasonicSensor::findDistance() {
   digitalWrite(trigPin, LOW);
   
   long pingTime = pulseIn(echoPin, HIGH, 30000); // returns ping time in microseconds
-  float pingSeconds = pingTime / 1000000.0;
-  float distance = (393. * 39.3700787) * pingSeconds; // convert distance to inches
-  distance = distance/2.0;
-  return distance;
+
+  float pingSeconds = pingTime / 1000000.0f;
+  float distance = (393.0f * 39.3700787f) * pingSeconds; // convert distance to inches
+  return distance / 2.0f;
 }

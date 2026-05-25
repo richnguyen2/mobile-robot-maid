@@ -2,13 +2,13 @@
 #include <Arduino.h>
 
 // Pin setup
-void ultrasonicSensor::begin() {
+void UltrasonicSensor::begin() {
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
 }
 
 // Max distance detected with sensor is ~5m
-float ultrasonicSensor::findDistance() {
+float UltrasonicSensor::get_distance() {
   // Tell sensor to send signal
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);

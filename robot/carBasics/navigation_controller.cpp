@@ -5,6 +5,7 @@ NavigationController::NavigationController(ImuInterface* imu_ptr, MotorDriver* m
       current_state(NavState::IDLE), target_heading(0.0f), 
       maneuver_start_time(0), maneuver_duration_ms(0), base_linear_vel(1.25f) {}
 
+// Distance is in ft
 void NavigationController::command_drive_straight(float distance) {
     target_heading = imu->get_heading();
     maneuver_duration_ms = static_cast<unsigned long>((distance / base_linear_vel) * 1000.0f);
@@ -22,15 +23,31 @@ void NavigationController::command_stop() {
     motors->stop();
 }
 
-void NavigationController::update() {
+void NavigationController::update(NavState new_state, float distance, float degrees_to_turn) {
+    
+    switch (new_state) {
+        case NavState::DRIVE_STRAIGHT: {
+            command_drive_straight(distance);
+            break;
+        }
+        case NavState::TURN_IN_PLACE: {
+            command_turn(degrees_to_turn);
+            break;
+        }
+    }
+
+    while (current_state == new_state)
+    {
+    imu->update();
+
     float current_heading = imu->get_heading();
     float obstacle_dist = sonar->get_distance();
-
-    if (obstacle_dist < OBSTACLE_THRESHOLD && current_state != NavState::IDLE) {
-        command_stop();
-        current_state = NavState::OBSTACLE_AVOIDANCE;
-        return;
-    }
+  
+    //if (obstacle_dist < OBSTACLE_THRESHOLD && current_state != NavState::IDLE) {
+    //    command_stop();
+    //    current_state = NavState::OBSTACLE_AVOIDANCE;
+    //    return;
+    //}
 
     // State Machine
     switch (current_state) {
@@ -55,11 +72,11 @@ void NavigationController::update() {
             float error = target_heading - current_heading;
             
             // If within 2 degrees of target, stop
-            if (abs(error) < 2.0f) {
+            if (abs(error) <= 10.0f) {
                 command_stop();
             } else {
                 // Spin in place. Positive error means turn right.
-                int spin_pwm = 120; // Hardcoded spin speed
+                int spin_pwm = 100; // Hardcoded spin speed
                 if (error > 0) {
                     motors->command_motors(spin_pwm, -spin_pwm); // Turn Right
                 } else {
@@ -73,5 +90,6 @@ void NavigationController::update() {
         case NavState::OBSTACLE_AVOIDANCE:
             motors->stop();
             break; 
+    }
     }
 }

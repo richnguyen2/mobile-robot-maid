@@ -24,7 +24,7 @@ private:
 
     float base_linear_vel;
     
-    static constexpr float OBSTACLE_THRESHOLD = 10.0f;
+    static constexpr float OBSTACLE_THRESHOLD = 10.0f; // 10 inch
     static constexpr float KP_HEADING = 2.0f;
 
 public:
@@ -34,7 +34,7 @@ public:
     void command_turn(float degrees_to_turn);
     void command_stop();
     
-    void update();
+    void update(NavState new_state, float distance, float);
     NavState get_state() const { return current_state; }
 };
 
